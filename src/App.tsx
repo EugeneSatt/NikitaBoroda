@@ -28,9 +28,9 @@ const Navbar = () => {
     <nav className={`fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center transition-all duration-500 ${
       isScrolled ? "bg-black text-white py-4" : "bg-transparent text-white mix-blend-difference"
     }`}>
-      <div className="font-display font-black text-2xl tracking-tighter uppercase">
+      <a href="#hero" className="font-display font-black text-2xl tracking-tighter uppercase">
         Nikita Boroda
-      </div>
+      </a>
       
       <div className="hidden md:flex gap-12 font-mono text-xs uppercase tracking-widest">
         {navLinks.map((link) => (
@@ -75,7 +75,7 @@ const Navbar = () => {
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex flex-col justify-end px-6 pb-12 overflow-hidden noise-overlay">
+    <section id="hero" className="relative min-h-screen flex flex-col justify-end px-6 pb-12 overflow-hidden noise-overlay">
       <div className="absolute inset-0 z-0">
         <video
           src="/images/video.MOV"
@@ -135,22 +135,52 @@ const WhyMe = () => {
     { id: "04", label: "TALK", title: "Бесплатная консультация (онлайн или очно)" },
   ];
 
+  const listVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 32 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+    },
+  };
+
   return (
     <section id="approach" ref={containerRef} className={`${SECTION_GAP} px-6 bg-surface-lowest relative overflow-hidden`}>
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
-        <div>
-          <h2 className="text-4xl md:text-7xl mb-12">Почему<br /><span className="text-accent">Я?</span></h2>
-          <div className="space-y-12">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.25 }}
+          variants={listVariants}
+        >
+          <motion.h2 variants={itemVariants} className="text-4xl md:text-7xl mb-12">Почему<br /><span className="text-accent">Я?</span></motion.h2>
+          <motion.div variants={listVariants} className="space-y-12">
             {items.map((item) => (
-              <div key={item.id} className="group">
+              <motion.div key={item.id} variants={itemVariants} className="group">
                 <span className="font-mono text-xs text-accent mb-2 block">{item.id} / {item.label}</span>
                 <h3 className="text-2xl md:text-3xl font-light group-hover:translate-x-4 transition-transform duration-300">{item.title}</h3>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
         
-        <div className="relative aspect-[3/4] bg-surface-low overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, x: 48, scale: 0.96 }}
+          whileInView={{ opacity: 1, x: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="relative aspect-[3/4] bg-surface-low overflow-hidden"
+        >
           <img 
             src="/images/me.jfif" 
             alt="Nikita Boroda" 
@@ -161,7 +191,7 @@ const WhyMe = () => {
               Записаться
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Moving Icon: Left to Right, Pointing Down */}
@@ -215,6 +245,24 @@ const Portfolio = () => {
 
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-400%"]);
   const trailOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
+  const revealVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.08,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 36 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
+    },
+  };
 
   const images = [
     "/images/Porfolio1.jfif",
@@ -243,18 +291,24 @@ const Portfolio = () => {
         </div>
       </motion.div>
 
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-end mb-16">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.18 }}
+        variants={revealVariants}
+        className="max-w-7xl mx-auto"
+      >
+        <motion.div variants={itemVariants} className="flex justify-between items-end mb-16">
           <h2 className="text-4xl md:text-9xl">Портфолио</h2>
           <span className="font-mono text-[10px] opacity-40 mb-4">WORKS</span>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 space-y-6">
+          <motion.div variants={itemVariants} className="lg:col-span-1 space-y-6">
             <PortfolioImage src={images[1]} alt="Tattoo 2" />
             <PortfolioImage src={images[2]} alt="Tattoo 3" />
-          </div>
-          <div className="lg:col-span-1 pt-12 space-y-6">
+          </motion.div>
+          <motion.div variants={itemVariants} className="lg:col-span-1 pt-12 space-y-6">
             <PortfolioImage src={images[3]} alt="Tattoo 4" />
             <motion.div 
               whileHover={{ scale: 1.05, rotate: -2 }}
@@ -263,14 +317,13 @@ const Portfolio = () => {
               <h4 className="text-2xl mb-4 group-hover:text-white">Больше работ в моем VK</h4>
               <ArrowRight className="text-accent group-hover:text-white group-hover:translate-x-2 transition-all" />
             </motion.div>
-          </div>
-          <div className="lg:col-span-1 space-y-6">
+          </motion.div>
+          <motion.div variants={itemVariants} className="lg:col-span-1 space-y-6">
             <PortfolioImage src={images[4]} alt="Tattoo 5" />
             <PortfolioImage src={images[0]} alt="Tattoo 5" />
-            
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
@@ -285,6 +338,24 @@ const Education = () => {
   const x = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
   const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
   const rotate = useTransform(scrollYProgress, [0, 1], [-10, 10]);
+  const listVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 32 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+    },
+  };
 
   return (
     <section 
@@ -304,23 +375,34 @@ const Education = () => {
       </div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center relative z-10">
-        <div>
-          <h2 className="text-4xl md:text-7xl mb-8">Обучение</h2>
-          <div className="inline-block bg-accent text-white px-6 py-4 font-normal text-lg md:text-2xl uppercase mb-12">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.25 }}
+          variants={listVariants}
+        >
+          <motion.h2 variants={itemVariants} className="text-4xl md:text-7xl mb-8">Обучение</motion.h2>
+          <motion.div variants={itemVariants} className="inline-block bg-accent text-white px-6 py-4 font-normal text-lg md:text-2xl uppercase mb-12">
             Я не обучаю с нуля. Только для тех, кто уже в деле.
-          </div>
+          </motion.div>
           
-          <div className="space-y-6">
+          <motion.div variants={listVariants} className="space-y-6">
             {["Композиция и динамика", "Техника", "Личные фишки и наработки"].map((text, i) => (
-              <div key={i} className="flex gap-6 items-center border-b border-white/10 pb-6">
+              <motion.div key={i} variants={itemVariants} className="flex gap-6 items-center border-b border-white/10 pb-6">
                 <span className="font-display text-4xl font-black text-accent">0{i + 1}</span>
                 <span className="text-2xl font-medium uppercase">{text}</span>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="bg-white text-black p-12 md:p-24 relative overflow-hidden border border-black/10">
+        <motion.div
+          initial={{ opacity: 0, x: 48, y: 20, scale: 0.97 }}
+          whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="bg-white text-black p-12 md:p-24 relative overflow-hidden border border-black/10"
+        >
           <div className="relative z-10">
             <span className="font-mono text-[10px] uppercase tracking-widest text-accent block mb-8">EDUCATION / 2026</span>
             <h3 className="text-4xl md:text-6xl mb-12 leading-none">Хватит делать грязь.<br />Делай стиль.</h3>
@@ -332,7 +414,7 @@ const Education = () => {
           <div className="absolute top-0 right-0 text-[20rem] font-black opacity-[0.03] leading-none select-none -translate-y-1/4 translate-x-1/4">
             STYLE
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -342,21 +424,50 @@ const Contact = () => {
   return (
     <section id="contacts" className={`${SECTION_GAP} px-6`}>
       <div className="max-w-7xl mx-auto text-center">
-        <h2 className="text-5xl md:text-[12rem] mb-24 leading-none">Связаться<br />со мной</h2>
+        <motion.h2
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="text-5xl md:text-[12rem] mb-24 leading-none"
+        >
+          Связаться<br />со мной
+        </motion.h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <a href="#" className="group border border-white/20 p-12 hover:bg-white hover:text-black transition-all duration-500">
+          <motion.a
+            href="#"
+            initial={{ opacity: 0, x: -80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+            className="group border border-white/20 p-12 hover:bg-white hover:text-black transition-all duration-500"
+          >
             <Instagram className="mx-auto mb-6 group-hover:text-accent" />
             <span className="text-3xl font-display font-black uppercase">Instagram</span>
-          </a>
-          <a href="#" className="group border border-white/20 p-12 hover:bg-white hover:text-black transition-all duration-500">
+          </motion.a>
+          <motion.a
+            href="#"
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.75, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="group border border-white/20 p-12 hover:bg-white hover:text-black transition-all duration-500"
+          >
             <Send className="mx-auto mb-6 group-hover:text-accent" />
             <span className="text-3xl font-display font-black uppercase">Telegram</span>
-          </a>
-          <a href="#" className="group border border-white/20 p-12 hover:bg-white hover:text-black transition-all duration-500">
+          </motion.a>
+          <motion.a
+            href="#"
+            initial={{ opacity: 0, x: 80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.75, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+            className="group border border-white/20 p-12 hover:bg-white hover:text-black transition-all duration-500"
+          >
             <MessageSquare className="mx-auto mb-6 group-hover:text-accent" />
             <span className="text-3xl font-display font-black uppercase">VK</span>
-          </a>
+          </motion.a>
         </div>
 
         <motion.div 
