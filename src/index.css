@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@700;900&family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Epilogue", sans-serif;
+  --font-mono: "Space Grotesk", monospace;
+
+  --color-surface: #131313;
+  --color-surface-low: #1b1b1b;
+  --color-surface-lowest: #0e0e0e;
+  --color-surface-highest: #353535;
+  --color-accent: #c00100;
+  --color-grey: #c8c6c5;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface text-white font-sans antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display font-black uppercase tracking-tighter;
+  }
+}
+
+.ink-bleed {
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.noise-overlay {
+  position: relative;
+}
+
+.noise-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.05;
+  pointer-events: none;
+}
