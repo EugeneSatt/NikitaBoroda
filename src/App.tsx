@@ -18,6 +18,13 @@ const Navbar = () => {
     setIsScrolled(latest > 50);
   });
 
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   const navLinks = [
     { name: "Почему я?", href: "#approach" },
     { name: "Портфолио", href: "#portfolio" },
@@ -25,7 +32,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center transition-all duration-500 ${
+    <nav className={`fixed top-0 left-0 w-full z-[80] px-6 py-6 flex justify-between items-center transition-all duration-500 ${
       isScrolled ? "bg-black text-white py-4" : "bg-transparent text-white mix-blend-difference"
     }`}>
       <a href="#hero" className="font-display font-black text-2xl tracking-tighter uppercase">
@@ -46,15 +53,16 @@ const Navbar = () => {
         Контакты
       </a>
 
-      <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+      <button className="md:hidden relative z-[90]" onClick={() => setIsOpen(!isOpen)}>
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {isOpen && (
         <motion.div 
-          initial={{ opacity: 0, x: "100%" }}
-          animate={{ opacity: 1, x: 0 }}
-          className="fixed inset-0 bg-surface z-40 flex flex-col items-center justify-center gap-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[70] bg-black/90 backdrop-blur-md flex flex-col items-center justify-center gap-8"
         >
           {navLinks.map((link) => (
             <a 
