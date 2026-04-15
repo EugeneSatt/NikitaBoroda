@@ -4,7 +4,7 @@
  */
 
 import { motion, useScroll, useTransform } from "motion/react";
-import { Instagram, Send, MessageSquare, Menu, X, ArrowRight } from "lucide-react";
+import { Instagram, Send, Menu, X, ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const SECTION_GAP = "py-24 md:py-32 lg:py-48";
@@ -36,38 +36,64 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-[80] px-6 py-6 flex justify-between items-center transition-all duration-500 ${
-      isScrolled ? "bg-black text-white py-4" : "bg-transparent text-white mix-blend-difference"
-    }`}>
-      <a href="#hero" className="font-display font-black text-2xl tracking-tighter uppercase">
-        Nikita Boroda
-      </a>
-      
-      <div className="hidden md:flex gap-12 font-mono text-xs uppercase tracking-widest">
-        {navLinks.map((link) => (
-          <a key={link.name} href={link.href} className="hover:text-accent transition-colors">
-            {link.name}
-          </a>
-        ))}
-      </div>
-
-      <a href="#contacts" className={`hidden md:block px-6 py-2 font-mono text-xs uppercase tracking-widest transition-colors ${
-        isScrolled ? "bg-white text-black hover:bg-accent hover:text-white" : "bg-white text-black hover:bg-accent hover:text-white"
-      }`}>
-        Контакты
-      </a>
-
-      <button className="md:hidden relative z-[90]" onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
+    <>
       {isOpen && (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[70] bg-black/90 backdrop-blur-md flex flex-col items-center justify-center gap-8"
+          className="fixed inset-0 z-[140] bg-black"
+        />
+      )}
+
+      <nav className={`fixed top-0 left-0 w-full z-[110] px-6 py-6 flex justify-between items-center transition-all duration-500 ${
+        isOpen
+          ? "bg-transparent text-white"
+          : isScrolled
+            ? "bg-black text-white py-4"
+            : "bg-transparent text-white mix-blend-difference"
+      }`}>
+        <a href="#hero" className="font-display font-black text-2xl tracking-tighter uppercase relative z-[150]">
+          Nikita Boroda
+        </a>
+        
+        <div className="hidden md:flex gap-12 font-mono text-xs uppercase tracking-widest">
+          {navLinks.map((link) => (
+            <a key={link.name} href={link.href} className="hover:text-accent transition-colors">
+              {link.name}
+            </a>
+          ))}
+        </div>
+
+        <a href="#contacts" className={`hidden md:block px-6 py-2 font-mono text-xs uppercase tracking-widest transition-colors ${
+          isScrolled ? "bg-white text-black hover:bg-accent hover:text-white" : "bg-white text-black hover:bg-accent hover:text-white"
+        }`}>
+          Контакты
+        </a>
+
+        <button
+          className={`md:hidden relative z-[150] ${isOpen ? "text-white" : ""}`}
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Закрыть меню" : "Открыть меню"}
         >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </nav>
+
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 16 }}
+          className="fixed inset-0 z-[145] flex flex-col items-center justify-center gap-8 text-white"
+        >
+          <button
+            className="absolute top-6 right-6 z-[160] text-white"
+            onClick={() => setIsOpen(false)}
+            aria-label="Закрыть меню"
+          >
+            <X size={24} />
+          </button>
           {navLinks.map((link) => (
             <a 
               key={link.name} 
@@ -81,7 +107,7 @@ const Navbar = () => {
           <a href="#contacts" onClick={() => setIsOpen(false)} className="bg-accent text-white px-12 py-4 font-display text-xl font-black uppercase">Контакты</a>
         </motion.div>
       )}
-    </nav>
+    </>
   );
 };
 
@@ -461,8 +487,8 @@ const Contact = () => {
           </motion.a>
           <motion.a
             href="#"
-            initial={{ opacity: 0, x: 80 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.75, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             className="group border border-white/20 p-12 hover:bg-white hover:text-black transition-all duration-500"
@@ -472,14 +498,18 @@ const Contact = () => {
           </motion.a>
           <motion.a
             href="#"
-            initial={{ opacity: 0, x: -80 }}
+            initial={{ opacity: 0, x: 80 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.75, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
             className="group border border-white/20 p-12 hover:bg-white hover:text-black transition-all duration-500"
           >
-            <MessageSquare className="mx-auto mb-6 group-hover:text-accent" />
-            <span className="text-3xl font-display font-black uppercase">VK</span>
+            <img
+              src="/icons/vk.png"
+              alt="VK"
+              className="mx-auto mb-6 h-6 w-6 object-contain transition-all [filter:brightness(0)_invert(1)] group-hover:[filter:brightness(0)_saturate(100%)_invert(12%)_sepia(97%)_saturate(7403%)_hue-rotate(2deg)_brightness(94%)_contrast(119%)]"
+            />
+            <span className="text-3xl font-display font-black uppercase">VKONTAKTE</span>
           </motion.a>
         </div>
 
