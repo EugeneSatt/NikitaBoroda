@@ -33,6 +33,7 @@ const Navbar = () => {
     { name: "Почему я?", href: "#approach" },
     { name: "Портфолио", href: "#portfolio" },
     { name: "Обучение", href: "#education" },
+    { name: "Цены", href: "#prices" },
   ];
 
   return (
@@ -112,17 +113,45 @@ const Navbar = () => {
 };
 
 const Hero = () => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const tryPlay = () => {
+      video.muted = true;
+      video.defaultMuted = true;
+      const playPromise = video.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {});
+      }
+    };
+
+    tryPlay();
+    video.addEventListener("loadeddata", tryPlay);
+    video.addEventListener("canplay", tryPlay);
+
+    return () => {
+      video.removeEventListener("loadeddata", tryPlay);
+      video.removeEventListener("canplay", tryPlay);
+    };
+  }, []);
+
   return (
     <section id="hero" className="relative min-h-screen flex flex-col justify-end px-6 pb-12 overflow-hidden noise-overlay">
       <div className="absolute inset-0 z-0">
         <video
+          ref={videoRef}
           src="/images/video.MOV"
           className="w-full h-full object-cover opacity-40 grayscale"
           autoPlay
           muted
+          defaultMuted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
+          disablePictureInPicture
         />
         <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
       </div>
@@ -139,12 +168,22 @@ const Hero = () => {
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
           <div className="max-w-md">
-            <div className="inline-block bg-accent text-white px-3 py-1 font-mono text-xs uppercase tracking-widest mb-6">
+            <motion.div
+              initial={{ y: 28, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="inline-block bg-accent text-white px-3 py-1 font-mono text-xs uppercase tracking-widest mb-6"
+            >
               Тату-мастер | Нижний Новгород
-            </div>
-            <p className="text-xl md:text-2xl font-medium leading-tight">
+            </motion.div>
+            <motion.p
+              initial={{ y: 32, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="text-xl md:text-2xl font-medium leading-tight"
+            >
               От миниатюры до большого проекта, практически любая сложность.
-            </p>
+            </motion.p>
           </div>
           
           <div className="hidden lg:block font-mono text-[10px] uppercase tracking-[0.5em] vertical-text opacity-30">
@@ -287,8 +326,8 @@ const Portfolio = () => {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.12,
-        delayChildren: 0.08,
+        staggerChildren: 0.07,
+        delayChildren: 0.02,
       },
     },
   };
@@ -298,7 +337,7 @@ const Portfolio = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
     },
   };
 
@@ -332,7 +371,7 @@ const Portfolio = () => {
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.18 }}
+        viewport={{ once: true, amount: 0.08 }}
         variants={revealVariants}
         className="max-w-7xl mx-auto"
       >
@@ -459,6 +498,140 @@ const Education = () => {
   );
 };
 
+const Prices = () => {
+  const items = [
+    {
+      id: "01",
+      label: "FLASH",
+      title: "Мини",
+      price: "от 4 000",
+      note: "Небольшие работы, надписи, знаки, быстрые сюжеты.",
+    },
+    {
+      id: "02",
+      label: "SESSION",
+      title: "Средний формат",
+      price: "от 8 000",
+      note: "Полноценная работа на 1 сеанс с проработкой композиции.",
+    },
+    {
+      id: "03",
+      label: "PROJECT",
+      title: "Большой проект",
+      price: "от 15 000",
+      note: "Крупные куски, сложные сюжеты, рукава и длинная работа.",
+    },
+    {
+      id: "04",
+      label: "CONSULT",
+      title: "Эскиз + консультация",
+      price: "от 2 000",
+      note: "Разбор идеи, посадка по телу, направление по проекту.",
+    },
+  ];
+
+  const revealVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.08,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 32 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
+    },
+  };
+
+  return (
+    <section id="prices" className={`${SECTION_GAP} px-6 bg-surface-lowest relative overflow-hidden`}>
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-surface-lowest" />
+        <div
+          className="absolute left-0 right-0 bottom-0 top-[42%] overflow-hidden"
+          style={{
+            maskImage: "linear-gradient(225deg, black 0%, black 38%, rgba(0,0,0,0.92) 46%, rgba(0,0,0,0.6) 52%, rgba(0,0,0,0.22) 58%, transparent 66%)",
+            WebkitMaskImage: "linear-gradient(225deg, black 0%, black 38%, rgba(0,0,0,0.92) 46%, rgba(0,0,0,0.6) 52%, rgba(0,0,0,0.22) 58%, transparent 66%)",
+          }}
+        >
+          <img
+            src="/images/prices-bg.jpg"
+            alt="Prices Background"
+            className="h-full w-full object-cover object-center opacity-55 blur-sm scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-surface-lowest via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-black/30" />
+        </div>
+      </div>
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.18 }}
+        variants={revealVariants}
+        className="max-w-7xl mx-auto relative z-10"
+      >
+        <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16 md:mb-24 items-end">
+          <div className="lg:col-span-8">
+            <h2 className="text-[clamp(3.25rem,10vw,9rem)] leading-[0.85] whitespace-nowrap">Цены</h2>
+          </div>
+          <div className="lg:col-span-4 lg:flex lg:justify-end">
+            <div className="inline-block bg-accent px-4 py-3 text-left">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-white max-w-xs">
+              Финальная стоимость зависит от размера, места, сложности и количества сеансов.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          {items.map((item, index) => (
+            <motion.div
+              key={item.id}
+              variants={itemVariants}
+              whileHover={{ y: -8, rotate: index % 2 === 0 ? -1.2 : 1.2 }}
+              className={`relative min-h-[320px] border p-8 md:p-10 flex flex-col justify-between transition-colors duration-300 ${
+                index === 1
+                  ? "bg-white text-black border-white"
+                  : "bg-surface text-white border-white/15 hover:border-accent"
+              }`}
+            >
+              <div>
+                <div className="flex items-start justify-between gap-4 mb-10">
+                  <span className={`font-mono text-[10px] uppercase tracking-[0.35em] ${index === 1 ? "text-accent" : "text-white/40"}`}>
+                    {item.id} / {item.label}
+                  </span>
+                  <span className={`h-3 w-3 ${index === 1 ? "bg-accent" : "bg-accent/80"}`} />
+                </div>
+
+                <h3 className="text-[clamp(1.7rem,3.2vw,2.25rem)] mb-4 leading-[0.95] break-words">{item.title}</h3>
+                <p className={`text-sm leading-relaxed max-w-[18rem] ${index === 1 ? "text-black/70" : "text-white/65"}`}>
+                  {item.note}
+                </p>
+              </div>
+
+              <div className="pt-10 border-t border-current/10">
+                <div className={`font-display font-black text-[clamp(2rem,5vw,3rem)] leading-none whitespace-nowrap ${index === 1 ? "text-black" : "text-accent"}`}>
+                  {item.price}
+                </div>
+                <div className={`mt-3 font-mono text-[10px] uppercase tracking-[0.35em] ${index === 1 ? "text-black/50" : "text-white/35"}`}>
+                  ₽ / старт
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+};
+
 const Contact = () => {
   return (
     <section id="contacts" className={`${SECTION_GAP} px-6`}>
@@ -571,6 +744,7 @@ export default function App() {
         <WhyMe />
         <Portfolio />
         <Education />
+        <Prices />
         <Contact />
       </main>
       <Footer />
