@@ -5,7 +5,7 @@
 
 import { motion, useScroll, useTransform } from "motion/react";
 import { Instagram, Send, MessageSquare, Menu, X, ArrowRight } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const SECTION_GAP = "py-24 md:py-32 lg:py-48";
 
@@ -14,9 +14,13 @@ const Navbar = () => {
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
 
-  useScroll().scrollY.on("change", (latest) => {
-    setIsScrolled(latest > 50);
-  });
+  useEffect(() => {
+    const unsubscribe = scrollY.on("change", (latest) => {
+      setIsScrolled(latest > 50);
+    });
+
+    return unsubscribe;
+  }, [scrollY]);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -320,10 +324,11 @@ const Portfolio = () => {
             <PortfolioImage src={images[3]} alt="Tattoo 4" />
             <motion.div 
               whileHover={{ scale: 1.05, rotate: -2 }}
-              className="bg-surface-highest p-12 aspect-square flex flex-col justify-center items-center text-center cursor-pointer transition-colors hover:bg-accent group"
+              whileTap={{ scale: 0.98 }}
+              className="bg-surface-highest p-12 aspect-square flex flex-col justify-center items-center text-center cursor-pointer transition-colors hover:bg-accent active:bg-accent group"
             >
-              <h4 className="text-2xl mb-4 group-hover:text-white">Больше работ в моем VK</h4>
-              <ArrowRight className="text-accent group-hover:text-white group-hover:translate-x-2 transition-all" />
+              <h4 className="text-2xl mb-4 group-hover:text-white group-active:text-white">Больше работ в моем VK</h4>
+              <ArrowRight className="text-accent group-hover:text-white group-active:text-white group-hover:translate-x-2 transition-all" />
             </motion.div>
           </motion.div>
           <motion.div variants={itemVariants} className="lg:col-span-1 space-y-6">
@@ -456,8 +461,8 @@ const Contact = () => {
           </motion.a>
           <motion.a
             href="#"
-            initial={{ opacity: 0, y: 80 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: 80 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.75, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             className="group border border-white/20 p-12 hover:bg-white hover:text-black transition-all duration-500"
@@ -467,7 +472,7 @@ const Contact = () => {
           </motion.a>
           <motion.a
             href="#"
-            initial={{ opacity: 0, x: 80 }}
+            initial={{ opacity: 0, x: -80 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.75, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
